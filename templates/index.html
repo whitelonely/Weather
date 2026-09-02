@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天气Weather | KAI</title>
+    <link rel="icon" type="image/x-icon" href="../static/weather.png">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <script src="../static/echarts.min.js"></script>
+    
+    <style>
+        body {
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .weather-card {
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .temp-c {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #333;
+        }
+        .temp-f {
+            font-size: 1.5rem;
+            color: #888;
+            margin-left: 10px;
+            position: relative;
+            top: -15px;
+        }
+        .weather-icon {
+            width: 100px;
+            height: 100px;
+            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.4));
+        }
+        .weather-icon-sm {
+            width: 20px;
+            height: 20px;
+        }
+        .weather-icon-lg{
+            width: 64px;
+            height: 64px;
+        }
+        .chart-container {
+            background: rgba(255,255,255,0.8);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .date-btns {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .date-btns .btn {
+            margin: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 图标 + 搜索框 -->
+        <div class="d-flex align-items-center mb-4">
+            <a href="/" style="display: inline-flex; align-items: center; line-height: 0; margin-right: 0.5rem;">
+                <img src="../static/weather.png" style="width: 120px; height: auto;" alt="天气WEATHER">
+            </a>
+            <form method="get" class="row g-2 ms-auto" style="flex: 1; justify-content: flex-end;">
+                <div class="col-auto" style="width: 35%;">
+                    <input 
+                        type="search" 
+                        name="city" class="form-control" 
+                        placeholder="输入城市名（国内中文不加市，国外英文也是）" 
+                        value="{{ search_city }}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-light">搜索</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 当前天气卡片 -->
+        <div class="weather-card">
+            <h2>{{ current.city }} 当前天气</h2>
+            <p class="text-muted">
+                <img class="weather-icon-sm" src="../static/OT.png" alt="时间OT"> 
+                时间：{{ current.time }} &nbsp;|&nbsp; 
+                <img class="weather-icon-sm" src="../static/LOC.png" alt="位置LOC"> 
+                位置：{{ current.lat }}°N, {{ current.lon }}°E</p>
+            <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ current.icon }}@4x.png" alt="天气图标">
+            <p class="lead text-capitalize">{{ current.weather }}</p>
+            <div>
+                <!-- <span>
+                    <img class="weather-icon-lg" src="../static/T.png" alt="温度T">
+                </span> -->
+                <span class="temp-c">{{ current.temp_c }}°C</span>
+                <span class="temp-f">{{ current.temp_f }}°F</span>
+            </div>
+            <p class="mt-2 text-muted">
+                <img class="weather-icon-sm" src="../static/RH.png" alt="湿度RH"> 
+                湿度 {{ current.humidity }}%  &nbsp;|&nbsp;
+                <img class="weather-icon-sm" src="../static/WS.png" alt="风速WS"> 
+                风速 {{ current.wind_speed }} m/s  &nbsp;|&nbsp;
+                <img class="weather-icon-sm" src="../static/P.png" alt="气压P"> 
+                气压 {{ current.pressure }} hPa
+            </p>
+        </div>
+
+        <!-- 温度趋势图（未来几天，每3小时预报） -->
+        <div class="chart-container">
+            <h3 class="text-center">未来温度趋势</h3>
+            <div class="date-btns" id="dateButtons"></div>
+            <div id="chart" style="width: 100%; height: 450px;"></div>
+        </div>
+
+        <!-- 底部栏 -->
+        <footer class="mt-4">
+            <div class="container">
+                <div class="bg-opacity-75 rounded-4 p-3 text-center">
+                    <p class="mb-1 text-muted">
+                        Copyright © 2026 天气Weather | <strong class="text-dark">@KAI</strong>
+                    </p>
+                    <small class="text-muted">数据来源：OpenWeatherMap</small>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script id="groups-data" type="application/json">{{ groups | tojson }}</script>
+    <script id="sortedDates-data" type="application/json">{{ sorted_dates | tojson }}</script>
+
+    <script>
+        const groups = JSON.parse(document.getElementById('groups-data').textContent);
+        const sortedDates = JSON.parse(document.getElementById('sortedDates-data').textContent);
+        let currentDate = sortedDates[0];
+
+        
+        /* 这个它报错了，但运行没问题，我就用上面方法改了
+             const groups = {{ groups | tojson }};
+        const sortedDates = {{ sorted_dates | tojson }}; 
+        */
+
+        const chartDom = document.getElementById('chart');
+        const myChart = echarts.init(chartDom);
+
+        function updateChart(date) {
+            const data = groups[date] || [];
+            const seriesData = data.map(item => ({
+                value: [item.time, item.temp_c],
+                temp_c: item.temp_c,
+                temp_f: item.temp_f,
+                weather: item.weather,
+                time: item.time
+            }));
+
+            const option = {
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        const p = params[0];
+                        return p.name + '<br/>' +
+                               '天气：' + p.data.weather + '<br/>' +
+                               p.data.temp_c + '°C / ' + p.data.temp_f + '°F';
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    name: '时间',
+                    axisLabel: { rotate: 45 }
+                },
+                yAxis: {
+                    type: 'value',
+                    name: '温度 (°C)',
+                    axisLabel: {
+                        formatter: '{value} °C'
+                    }
+                },
+                series: [{
+                    data: seriesData,
+                    type: 'line',
+                    smooth: true,
+                    symbol: 'circle',
+                    symbolSize: 8,
+                    lineStyle: { color: '#5470C6', width: 2 },
+                    itemStyle: { color: '#5470C6' },
+                    label: {
+                        show: true,
+                        formatter: function(params) {
+                            return '{weather|' + params.data.weather + '}\n{c|' + params.data.temp_c + '°C}\n{f|' + params.data.temp_f + '°F}';
+                        },
+                        rich: {
+                            weather: {
+                                fontSize: 11,
+                                color: '#2c3e50',
+                                fontWeight: 'bold',
+                                align: 'center',
+                                padding: [2, 0]
+                            },
+                            c: {
+                                fontSize: 14,
+                                fontWeight: 'bold',
+                                color: '#333',
+                                align: 'center'
+                            },
+                            f: {
+                                fontSize: 10,
+                                color: '#888',
+                                align: 'center',
+                                padding: [2, 0, 0, 0]
+                            }
+                        }
+                    },
+                    markLine: {
+                        silent: true,
+                        data: [{ type: 'average', name: '平均温度' }],
+                        label: { formatter: '{c} °C' }
+                    }
+                }]
+            };
+            myChart.setOption(option, true);
+        }
+
+        function renderButtons() {
+            const btnContainer = document.getElementById('dateButtons');
+            btnContainer.innerHTML = '';
+            sortedDates.forEach(date => {
+                const btn = document.createElement('button');
+                btn.className = 'btn ' + (date === currentDate ? 'btn-primary' : 'btn-outline-primary');
+                btn.textContent = date;
+                btn.addEventListener('click', () => {
+                    currentDate = date;
+                    updateChart(date);
+                    renderButtons();
+                });
+                btnContainer.appendChild(btn);
+            });
+        }
+
+        updateChart(currentDate);
+        renderButtons();
+
+        window.addEventListener('resize', () => myChart.resize());
+    </script>
+</body>
+</html>

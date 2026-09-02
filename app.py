@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 API_KEY = "29207794431ad2b1730bf3e44f4d4fad"
 
-USE_IP_LOCATION = True  # True: 通过IP获取, False: 使用手动经纬度
+USE_IP_LOCATION = False  # True: 通过IP获取, False: 使用手动经纬度
 # lon = 103.83   # 经度
 # lat = 36.06    # 纬度
 MANUAL_lat = 36.064
@@ -176,4 +176,4 @@ def index():
     )
 
 if __name__ == '__main__':
-    app.run(debug=False, host='127.0.0.1', port=1314)
+    app.run(debug=False, host='0.0.0.0', port=1314)

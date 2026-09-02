@@ -9,6 +9,8 @@
 # @FileName : weather_app.py
 # @Blog     : https://whitelonely.github.io
 '''
+
+import os
 import datetime
 import requests
 import config
@@ -17,7 +19,7 @@ from pypinyin import lazy_pinyin, Style
 
 app = Flask(__name__)
 
-API_KEY = "29207794431ad2b1730bf3e44f4d4fad"
+API_KEY = os.environ.get('API_KEY')
 
 USE_IP_LOCATION = False  # True: 通过IP获取, False: 使用手动经纬度
 # lon = 103.83   # 经度

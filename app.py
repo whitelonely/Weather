@@ -53,11 +53,22 @@ def get_location_by_ip(client_ip):
 
     # 修改后获取代码
     try:
-        url = f'http://ip-api.com/json/{client_ip}?lang=zh-CN'
+        token = os.environ.get('IPINFO_TOKEN')
+        if token:
+            url = f'https://ipinfo.io/{client_ip}/json?token={token}' if client_ip else f'https://ipinfo.io/json?token={token}'
+        else:
+            # 无 token 模式（每天限制约 1000 次）
+            url = f'https://ipinfo.io/{client_ip}/json' if client_ip else 'https://ipinfo.io/json'
+        
         resp = requests.get(url, timeout=20)
         data = resp.json()
-        if data.get('status') == 'success':
-            return data['lat'], data['lon'], data.get('city', '')
+        
+        # ipinfo.io 返回格式示例：
+        # {"ip": "xxx", "city": "成都", "region": "四川", "country": "CN", "loc": "30.5728,104.0668"}
+        if 'loc' in data and data['loc']:
+            lat, lon = data['loc'].split(',')
+            city = data.get('city', '')
+            return float(lat), float(lon), city
     except Exception as e:
         print(f"IP定位失败: {e}")
 

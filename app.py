@@ -162,6 +162,8 @@ def index():
 
     # 城市名优先级：搜索关键词 > IP获取的城市 > API返回的name > "当前"
     api_city = current_data.get("name", "").strip()
+    api_city = config.CITY_NAME_MAP.get(api_city, api_city)
+    
     if search_city and use_search_result:
         city = search_city
     else:

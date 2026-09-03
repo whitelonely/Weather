@@ -101,12 +101,12 @@
             <h2>{{ current.city }} 当前天气</h2>
             <p style="font-size: 0.8rem; color: #666; margin-top: -5px;">
                 {% if search_city %}
-                    <span style="color: #17a2b8;">🔍 手动搜索</span>
+                    <span style="color: #17a2b8;">城市来源：手动搜索</span>
                 {% else %}
                     {% if current.from_gps %}
-                        <span style="color: #28a745;">📍 GPS定位</span>
+                        <span style="color: #28a745;">城市来源：GPS定位</span>
                     {% else %}
-                        <span style="color: #ffc107;">📍 IP定位</span>
+                        <span style="color: #ffc107;">城市来源：IP定位</span>
                     {% endif %}
                     <span style="color: #999;">（若地址不准确，请手动搜索）</span>
                 {% endif %}

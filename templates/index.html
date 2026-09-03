@@ -69,6 +69,10 @@
         .date-btns .btn {
             margin: 3px;
         }
+        /* 这些内容不能换行，否则信息展示不清晰 */
+        .nowrap {
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -96,13 +100,13 @@
         <div class="weather-card">
             <h2>{{ current.city }} 当前天气</h2>
             <p class="text-muted">
-                <span>
+                <span class="nowrap">
                     <img class="weather-icon-sm" src="../static/OT.png" alt="时间OT"> 
                     时间：{{ current.time }} &nbsp;|&nbsp; 
                 </span>
-                <span>
+                <span class="nowrap">
                     <img class="weather-icon-sm" src="../static/LOC.png" alt="位置LOC"> 
-                    位置：{{ current.lat }}°N, {{ current.lon }}°E</p>
+                    位置：{{ current.lat }}°N, {{ current.lon }}°E
                 </span>
             <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ current.icon }}@4x.png" alt="天气图标">
             <p class="lead text-capitalize">{{ current.weather }}</p>
@@ -114,12 +118,18 @@
                 <span class="temp-f">{{ current.temp_f }}°F</span>
             </div>
             <p class="mt-2 text-muted">
-                <img class="weather-icon-sm" src="../static/RH.png" alt="湿度RH"> 
-                湿度 {{ current.humidity }}%  &nbsp;|&nbsp;
-                <img class="weather-icon-sm" src="../static/WS.png" alt="风速WS"> 
-                风速 {{ current.wind_speed }} m/s  &nbsp;|&nbsp;
-                <img class="weather-icon-sm" src="../static/P.png" alt="气压P"> 
-                气压 {{ current.pressure }} hPa
+                <span class="nowrap">
+                    <img class="weather-icon-sm" src="../static/RH.png" alt="湿度RH"> 
+                    湿度 {{ current.humidity }}%  &nbsp;|&nbsp;
+                </span>
+                <span class="nowrap">
+                    <img class="weather-icon-sm" src="../static/WS.png" alt="风速WS"> 
+                    风速 {{ current.wind_speed }} m/s  &nbsp;|&nbsp;
+                </span>
+                <span class="nowrap">
+                    <img class="weather-icon-sm" src="../static/P.png" alt="气压P"> 
+                    气压 {{ current.pressure }} hPa
+                </span>
             </p>
         </div>
 

@@ -13,9 +13,6 @@
             background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
             min-height: 100vh;
             padding: 20px;
-            min-width: 768px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
         .weather-card {
             background: rgba(255,255,255,0.8);
@@ -90,10 +87,14 @@
         <div class="weather-card">
             <h2>{{ current.city }} 当前天气</h2>
             <p class="text-muted">
-                <img class="weather-icon-sm" src="../static/OT.png" alt="时间OT"> 
-                时间：{{ current.time }} &nbsp;|&nbsp; 
-                <img class="weather-icon-sm" src="../static/LOC.png" alt="位置LOC"> 
-                位置：{{ current.lat }}°N, {{ current.lon }}°E</p>
+                <span>
+                    <img class="weather-icon-sm" src="../static/OT.png" alt="时间OT"> 
+                    时间：{{ current.time }} &nbsp;|&nbsp; 
+                </span>
+                <span>
+                    <img class="weather-icon-sm" src="../static/LOC.png" alt="位置LOC"> 
+                    位置：{{ current.lat }}°N, {{ current.lon }}°E</p>
+                </span>
             <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ current.icon }}@4x.png" alt="天气图标">
             <p class="lead text-capitalize">{{ current.weather }}</p>
             <div>
@@ -117,7 +118,7 @@
         <div class="chart-container">
             <h3 class="text-center">未来温度趋势</h3>
             <div class="date-btns" id="dateButtons"></div>
-            <div id="chart" style="width: 95%; height: 450px;"></div>
+            <div id="chart" style="width: 100%; height: 450px;"></div>
         </div>
 
         <!-- 底部栏 -->
@@ -139,7 +140,7 @@
         window.addEventListener('load', function() {
             // 判断是否为竖屏（高度 > 宽度）且屏幕宽度小于 768px（移动设备典型宽度）
             if (window.innerHeight > window.innerWidth && window.innerWidth < 768) {
-                alert('PC电脑浏览器或手机横屏体验更佳！');
+                alert('！PC电脑浏览器或手机横屏体验更佳！');
             }
         });
 

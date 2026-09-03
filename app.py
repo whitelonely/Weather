@@ -210,7 +210,7 @@ def index():
 
 @app.errorhandler(404)
 def page_not_found():
-    return render_template('404_NotFound.html')
+    return render_template('404_NotFound.html'), 404
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0', port=1314)

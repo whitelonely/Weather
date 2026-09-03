@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>404-Not-Found - 天气Weather | KAI</title>
+    <link rel="icon" type="image/x-icon" href="../static/weather.png">
+    <link href="../static/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <style>
+        body {
+            /* background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); */
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            max-width: 500px;
+        }
+        .error-code {
+            font-size: 5rem;
+            font-weight: bold;
+            color: #dc3545;
+        }
+        .error-msg {
+            font-size: 1.2rem;
+            color: #555;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-card">
+        <div class="error-code"> 404 </div>
+        <h2>嗯？！进入了未知领域，点击“传送”回到主页吧~</h2>
+        <!-- <p class="error-msg">{{ error_message or '无法获取天气数据，请稍后重试。' }}</p> -->
+        <p class="error-msg">{{ error_message }}</p>
+        <a href="/" class="btn btn-primary btn-lg mt-3"> 传 送 </a>
+
+        <!-- 底部栏 -->
+        <footer class="mt-4">
+            <div class="container">
+                <div class="bg-opacity-75 rounded-4 p-3 text-center">
+                    <p class="mb-1 text-muted">
+                        Copyright © 2026 天气Weather | <strong class="text-dark">@KAI</strong>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

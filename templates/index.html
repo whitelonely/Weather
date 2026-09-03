@@ -118,7 +118,7 @@
                 </span>
                 <span class="nowrap">
                     <img class="weather-icon-sm" src="../static/LOC.png" alt="位置LOC"> 
-                    位置：{{ current.lat }}°N, {{ current.lon }}°E
+                    位置：{{ "%0.4f" | format(current.lat) }}°N, {{ "%0.4f" | format(current.lon) }}°E
                 </span>
                 
             </p>

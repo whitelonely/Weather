@@ -27,14 +27,39 @@ USE_IP_LOCATION = False  # True: 通过IP获取, False: 使用手动经纬度
 MANUAL_lat = 36.064
 MANUAL_lon = 103.839
 
-def get_location_by_ip():
+def get_client_ip():
+    # 从请求头获取访问者IP（这玩意而是新加的，在测试）
+    forwarded = request.headers.get('X-Forwarded-For')
+    if forwarded:
+        ip = forwarded.split(',')[0].strip()
+        return ip
+
+    real_ip = request.headers.get('X-Real-IP')
+    if real_ip:
+        return real_ip.strip()
+
+    return request.remote_addr
+
+def get_location_by_ip(client_ip):
+    # 原始本地测试获取IP代码
+    # try:
+    #     resp = requests.get('http://ip-api.com/json/?lang=zh-CN', timeout=20)
+    #     data = resp.json()
+    #     if data.get('status') == 'success':
+    #         return data['lat'], data['lon'], data.get('city', '')
+    # except:
+    #     pass
+
+    # 修改后获取代码
     try:
-        resp = requests.get('http://ip-api.com/json/?lang=zh-CN', timeout=20)
+        url = f'http://ip-api.com/json/{client_ip}?lang=zh-CN'
+        resp = requests.get(url, timeout=20)
         data = resp.json()
         if data.get('status') == 'success':
             return data['lat'], data['lon'], data.get('city', '')
-    except:
-        pass
+    except Exception as e:
+        print(f"IP定位失败: {e}")
+
     return None
 
 def chinese_to_pinyin(text):
@@ -85,7 +110,12 @@ def index():
     if not use_search_result:
         ### ===============  IP-API获取经纬度 =============== ###
         if USE_IP_LOCATION:
-            loc = get_location_by_ip()
+            # 原始代码
+            # loc = get_location_by_ip()
+
+            # 修改后代码
+            client_ip = get_client_ip()   # 获取真实IP
+            loc = get_location_by_ip(client_ip)  # 传入IP
             print(loc)
             if loc:
                 lat, lon, ip_city = loc

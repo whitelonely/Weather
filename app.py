@@ -5,7 +5,7 @@
 # @Update1  : add ip-api to get lat and lon.(260804)
 # @Update2  : add city-search(260805)
 # @Update3  : modularize code and fix some bugs(260806)
-# @update4  : Optimize IP location, support visitor?IP weather(200903)
+# @update4  : Optimize IP location, support visitor-IP weather(200903)
 # @Author   : KAI
 # @FileName : weather_app.py
 # @Blog     : https://whitelonely.github.io

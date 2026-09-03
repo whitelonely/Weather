@@ -9,6 +9,30 @@
     <script src="../static/echarts.min.js"></script>
     
     <style>
+        /* 针对手机竖屏界面：当视口宽度小于 600px 时，整体缩放 */
+        @media (max-width: 600px) {
+            html, body {
+                margin: 0;
+                padding: 0;
+                overflow-x: hidden;   /* 防止水平溢出 */
+                width: 100%;
+            }
+            body {
+                transform-origin: top left;
+                transform: scale(calc(100vw / 600));
+                /* 缩放后高度需要相应增加，以显示完整内容 */
+                height: calc(100vh / (100vw / 600));
+                overflow-y: auto;     /* 允许垂直滚动 */
+                min-height: 100vh;
+            }
+            /* 保证容器保持 600px 宽度基准 */
+            .container, .container-fluid {
+                min-width: 600px;
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+
         body {
             background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
             min-height: 100vh;

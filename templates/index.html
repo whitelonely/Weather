@@ -13,6 +13,9 @@
             background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
             min-height: 100vh;
             padding: 20px;
+            min-width: 768px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
         .weather-card {
             background: rgba(255,255,255,0.8);
@@ -136,7 +139,7 @@
         window.addEventListener('load', function() {
             // 判断是否为竖屏（高度 > 宽度）且屏幕宽度小于 768px（移动设备典型宽度）
             if (window.innerHeight > window.innerWidth && window.innerWidth < 768) {
-                alert('！PC电脑浏览器或手机横屏体验更佳！');
+                alert('PC电脑浏览器或手机横屏体验更佳！');
             }
         });
 

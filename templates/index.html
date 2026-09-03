@@ -100,12 +100,16 @@
         <div class="weather-card">
             <h2>{{ current.city }} 当前天气</h2>
             <p style="font-size: 0.8rem; color: #666; margin-top: -5px;">
-                {% if current.from_gps %}
-                    <span style="color: #28a745;">📍 GPS定位</span>
+                {% if search_city %}
+                    <span style="color: #17a2b8;">🔍 手动搜索</span>
                 {% else %}
-                    <span style="color: #ffc107;">📍 IP定位</span>
+                    {% if current.from_gps %}
+                        <span style="color: #28a745;">📍 GPS定位</span>
+                    {% else %}
+                        <span style="color: #ffc107;">📍 IP定位</span>
+                    {% endif %}
+                    <span style="color: #999;">（若地址不准确，请手动搜索）</span>
                 {% endif %}
-                <span style="color: #999;">（若地址不准确，请手动搜索）</span>
             </p>
             <p class="text-muted">
                 <span class="nowrap">

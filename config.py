@@ -37,7 +37,7 @@ CITY_NAME_MAP = {
     'Hefei': '合肥',
     'Nanchang': '南昌',
     'Guiyang': '贵阳',
-    'Lanzhou': '兰州',   # 别忘了你自己的城市
+    'Lanzhou': '兰州',
     'Haikou': '海口',
     'Urumqi': '乌鲁木齐',
     'Lhasa': '拉萨',

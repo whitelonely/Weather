@@ -99,6 +99,14 @@
         <!-- 当前天气卡片 -->
         <div class="weather-card">
             <h2>{{ current.city }} 当前天气</h2>
+            <p style="font-size: 0.8rem; color: #666; margin-top: -5px;">
+                {% if current.from_gps %}
+                    <span style="color: #28a745;">📍 GPS定位</span>
+                {% else %}
+                    <span style="color: #ffc107;">📍 IP定位</span>
+                {% endif %}
+                <span style="color: #999;">（若地址不准确，请手动搜索）</span>
+            </p>
             <p class="text-muted">
                 <span class="nowrap">
                     <img class="weather-icon-sm" src="../static/OT.png" alt="时间OT"> 
@@ -166,6 +174,22 @@
                 alert('！PC电脑浏览器或手机横屏体验更佳！');
             }
         });
+
+        if (!window.location.search.includes('lat=') && !window.location.search.includes('city=')) {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(pos) {
+                        var lat = pos.coords.latitude;
+                        var lon = pos.coords.longitude;
+                        window.location.href = '/?lat=' + lat + '&lon=' + lon;
+                    },
+                    function(err) {
+                        console.log('GPS定位失败或用户拒绝，使用IP定位');
+                    },
+                    { timeout: 10000, enableHighAccuracy: true }
+                );
+            }
+        }
 
         const groups = JSON.parse(document.getElementById('groups-data').textContent);
         const sortedDates = JSON.parse(document.getElementById('sortedDates-data').textContent);

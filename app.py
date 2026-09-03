@@ -53,15 +53,11 @@ def get_location_by_ip(client_ip):
 
     # 修改后获取代码
     try:
-        url = f'https://ipwho.is/{client_ip}'
+        url = f'http://ip-api.com/json/{client_ip}?lang=zh-CN'
         resp = requests.get(url, timeout=20)
         data = resp.json()
-        
-        if data.get('success') and 'latitude' in data and 'longitude' in data:
-            lat = float(data['latitude'])
-            lon = float(data['longitude'])
-            city = data.get('city', '')
-            return lat, lon, city
+        if data.get('status') == 'success':
+            return data['lat'], data['lon'], data.get('city', '')
     except Exception as e:
         print(f"IP定位失败: {e}")
 
@@ -92,6 +88,23 @@ def index():
     lat = lon = None
     ip_city = None
     current_data = None
+    from_gps = False
+
+    # ===== GPS 优先 =====
+    lat_param = request.args.get('lat')
+    lon_param = request.args.get('lon')
+    if lat_param and lon_param:
+        try:
+            lat = float(lat_param)
+            lon = float(lon_param)
+            params = {"lat": lat, "lon": lon, "appid": API_KEY, "lang": "zh_cn"}
+            resp = requests.get(CURRENT_URL, params=params, timeout=20)
+            resp.raise_for_status()
+            current_data = resp.json()
+            ip_city = current_data.get("name", "")
+            from_gps = True
+        except:
+            lat = lon = None
 
     if search_city:
         pinyin = chinese_to_pinyin(search_city)
@@ -112,7 +125,7 @@ def index():
         except Exception:
             use_search_result = False   # 搜索失败，回退到IP定位
 
-    if not use_search_result:
+    if current_data is None and not use_search_result:
         ### ===============  IP-API获取经纬度 =============== ###
         if USE_IP_LOCATION:
             # 原始代码
@@ -165,7 +178,8 @@ def index():
         "lon": lon,
         "humidity": current_data["main"]["humidity"],
         "wind_speed": current_data["wind"]["speed"],
-        "pressure": current_data["main"]["pressure"]
+        "pressure": current_data["main"]["pressure"],
+        "from_gps": from_gps
     }
 
     ### =========  未来温度趋势（5天/3小时预报） ========= ###

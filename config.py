@@ -1,4 +1,6 @@
 import logging
+import os
+import json
 
 class NoStaticFilter(logging.Filter):
     """过滤掉静态资源的请求日志"""
@@ -7,42 +9,22 @@ class NoStaticFilter(logging.Filter):
 
 logging.getLogger('werkzeug').addFilter(NoStaticFilter())
 
-CITY_NAME_MAP = {
-    'Beijing': '北京',
-    'Shanghai': '上海',
-    'Guangzhou': '广州',
-    'Shenzhen': '深圳',
-    'Chengdu': '成都',
-    'Hangzhou': '杭州',
-    'Wuhan': '武汉',
-    'Nanjing': '南京',
-    'Chongqing': '重庆',
-    'Tianjin': '天津',
-    'Xi\'an': '西安',
-    'Changsha': '长沙',
-    'Kunming': '昆明',
-    'Xiamen': '厦门',
-    'Qingdao': '青岛',
-    'Dalian': '大连',
-    'Suzhou': '苏州',
-    'Ningbo': '宁波',
-    'Fuzhou': '福州',
-    'Zhengzhou': '郑州',
-    'Shenyang': '沈阳',
-    'Harbin': '哈尔滨',
-    'Changchun': '长春',
-    'Shijiazhuang': '石家庄',
-    'Taiyuan': '太原',
-    'Jinan': '济南',
-    'Hefei': '合肥',
-    'Nanchang': '南昌',
-    'Guiyang': '贵阳',
-    'Lanzhou': '兰州',
-    'Haikou': '海口',
-    'Urumqi': '乌鲁木齐',
-    'Lhasa': '拉萨',
-    'Xining': '西宁',
-    'Yinchuan': '银川',
-    'Hohhot': '呼和浩特',
-    'Nanning': '南宁',
-}
+def _load_city_map():
+    """从 data/city_map.json 加载城市中英文映射表"""
+    try:
+        # 获取当前文件所在目录（config.py 所在目录）
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        # 指向 data 子文件夹
+        json_path = os.path.join(current_dir, 'data', 'city_map.json')
+        
+        with open(json_path, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        print("警告: data/city_map.json 文件未找到，城市映射表为空")
+        return {}
+    except json.JSONDecodeError:
+        print("警告: data/city_map.json 格式错误，城市映射表为空")
+        return {}
+
+# 加载城市映射表（供其他模块导入使用）
+CITY_NAME_MAP = _load_city_map()

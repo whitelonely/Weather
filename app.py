@@ -21,7 +21,7 @@ app = Flask(__name__)
 
 API_KEY = os.environ.get('API_KEY')
 
-USE_IP_LOCATION = False  # True: 通过IP获取, False: 使用手动经纬度
+USE_IP_LOCATION = True  # True: 通过IP获取, False: 使用手动经纬度
 # lon = 103.83   # 经度
 # lat = 36.06    # 纬度
 MANUAL_lat = 36.064

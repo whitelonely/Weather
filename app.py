@@ -209,7 +209,7 @@ def index():
     )
 
 @app.errorhandler(404)
-def page_not_found():
+def page_not_found(e):
     return render_template('404.html')
 
 if __name__ == '__main__':

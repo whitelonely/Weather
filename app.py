@@ -53,16 +53,15 @@ def get_location_by_ip(client_ip):
 
     # 修改后获取代码
     try:
-
-        url = 'https://ipinfo.io/json'
-        
+        url = f'https://ipwho.is/{client_ip}'
         resp = requests.get(url, timeout=20)
         data = resp.json()
         
-        if 'loc' in data and data['loc']:
-            lat, lon = data['loc'].split(',')
+        if data.get('success') and 'latitude' in data and 'longitude' in data:
+            lat = float(data['latitude'])
+            lon = float(data['longitude'])
             city = data.get('city', '')
-            return float(lat), float(lon), city
+            return lat, lon, city
     except Exception as e:
         print(f"IP定位失败: {e}")
 

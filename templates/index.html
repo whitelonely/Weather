@@ -73,9 +73,6 @@
         .nowrap {
             white-space: nowrap;
         }
-        .form-control {
-            font-size: 12px;   /* 原 Bootstrap 默认是 16px */
-        }
     </style>
 </head>
 <body>
@@ -90,7 +87,7 @@
                     <input 
                         type="search" 
                         name="city" class="form-control" 
-                        placeholder="输入城市名（国内中文不加市，国外英文也是）" 
+                        placeholder="输入城市名（中文不加市/国外英文）" 
                         value="{{ search_city }}">
                 </div>
                 <div class="col-auto">

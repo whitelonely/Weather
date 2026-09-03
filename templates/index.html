@@ -108,7 +108,9 @@
                     <img class="weather-icon-sm" src="../static/LOC.png" alt="位置LOC"> 
                     位置：{{ current.lat }}°N, {{ current.lon }}°E
                 </span>
-            <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ current.icon }}@4x.png" alt="天气图标">
+                <span class="nowrap">
+                    <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ current.icon }}@4x.png" alt="天气图标">
+                </span>
             <p class="lead text-capitalize">{{ current.weather }}</p>
             <div>
                 <!-- <span>

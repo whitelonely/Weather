@@ -186,25 +186,6 @@
             }
         });
 
-        // 搜索表单提交拦截：如果输入为空，不提交
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-            var input = document.getElementById('cityInput');
-            var value = input.value.trim();
-            
-            // 如果为空或只有空格，阻止提交并提示
-            if (!value) {
-                e.preventDefault();
-                var tip = document.getElementById('searchTip');
-                tip.style.display = 'block';
-                // 3秒后自动隐藏提示
-                setTimeout(function() {
-                    tip.style.display = 'none';
-                }, 3000);
-                // 聚焦到输入框（方便用户直接输入）
-                input.focus();
-            }
-        });
-
         if (!window.location.search.includes('lat=') && !window.location.search.includes('city=')) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -331,6 +312,22 @@
         renderButtons();
 
         window.addEventListener('resize', () => myChart.resize());
+
+        // 搜索表单提交拦截
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            var input = document.getElementById('cityInput');
+            var value = input.value.trim();
+            
+            if (!value) {
+                e.preventDefault();
+                var tip = document.getElementById('searchTip');
+                tip.style.display = 'block';
+                setTimeout(function() {
+                    tip.style.display = 'none';
+                }, 3000);
+                input.focus();
+            }
+        });
     </script>
 </body>
 </html>

@@ -110,12 +110,13 @@
                     {% endif %}
                     <span style="color: #999;">（若不准确，请手动搜索）</span>
                 {% endif %}
-
+            </p>
+            <p class="col-12 text-center" style="font-size: 0.8rem; color: #ff6b6b; margin-top: -5px;">
                 <!-- 搜索警告信息 -->
                 {% if city_warning %}
-                    <p class="col-12 text-center" style="font-size: 0.8rem; color: #ff6b6b; margin-top: -5px;">
+                    <span>
                         （⚠️ {{ city_warning }}）
-                    </p>
+                    <span>
                 {% endif %}
             </p>
             <p class="text-muted">

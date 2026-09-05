@@ -85,14 +85,25 @@ def kelvin_to_celsius_fahrenheit(temp_k):
 def clean_city_input(raw):
     if not raw:
         return ''
-
-    if not raw.strip():
+    
+    # 去除首尾空格
+    raw = raw.strip()
+    
+    # 如果全是空格，返回空字符串
+    if not raw:
         return ''
     
-    # 去除所有空白字符（空格、换行、制表符等）
-    cleaned = re.sub(r'\s+', '', raw)
-    # 去除特殊标点符号（保留中英文）
-    cleaned = re.sub(r'[^a-zA-Z\u4e00-\u9fff]', '', cleaned)
+    # 提取所有中英文字符（用于判断是否有有效内容）
+    chinese_english = re.sub(r'[^a-zA-Z\u4e00-\u9fff]', '', raw)
+    # 如果提取后没有中英文字符，说明输入无效（纯数字、纯标点等）
+    if not chinese_english:
+        return None  # 触发回退"兰州"
+    # 去掉数字
+    cleaned = re.sub(r'\d+', '', raw)
+    # 去掉所有特殊标点符号（保留中英文 + 保留空格）
+    cleaned = re.sub(r'[^a-zA-Z\u4e00-\u9fff\s]', '', cleaned)
+    # 去掉多余空格（多个空格合并为一个，并去除首尾）
+    cleaned = re.sub(r'\s+', ' ', cleaned).strip()
     
     return cleaned
 
@@ -108,11 +119,16 @@ def index():
     # ===== 输入关键词处理 =====
     search_city = clean_city_input(raw_input)
     
-    # 如果清洗后为空（纯数字、纯标点、纯空格、纯空格等），不设置 search_city，让页面走默认定位
-    if not search_city:
-        search_city = "兰州"   # 或者保持空字符串，但这样不会触发搜索逻辑
+    if search_city is None:
+        # 无效输入 → 强制"兰州"
+        search_city = "兰州"
+        city_warning = '输入无效，已自动切换为兰州天气'
+    elif search_city == '':
+        # 空输入 → 走默认定位，不提示
+        search_city = ''
         city_warning = None
     elif raw_input != search_city:
+        # 清洗前后不一致 → 显示提示
         city_warning = f'已自动清理无效字符："{raw_input}" → "{search_city}"'
     else:
         city_warning = None

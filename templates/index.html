@@ -93,12 +93,6 @@
                 <div class="col-auto">
                     <button type="submit" class="btn btn-light">搜索</button>
                 </div>
-                <!-- 显示警告信息 -->
-                {% if city_warning %}
-                    <div class="col-12 text-end" style="font-size: 0.8rem; color: #ff6b6b; margin-top: 5px;">
-                        ⚠️ {{ city_warning }}
-                    </div>
-                {% endif %}
             </form>
         </div>
 
@@ -115,6 +109,14 @@
                         <span style="color: #ffc107;">城市来源：IP定位</span>
                     {% endif %}
                     <span style="color: #999;">（若不准确，请手动搜索）</span>
+                {% endif %}
+            </p>
+            <p>
+                <!-- 搜索警告信息 -->
+                {% if city_warning %}
+                    <div class="col-12 text-end" style="font-size: 0.8rem; color: #ff6b6b; margin-top: 5px;">
+                        （⚠️ {{ city_warning }}）
+                    </div>
                 {% endif %}
             </p>
             <p class="text-muted">

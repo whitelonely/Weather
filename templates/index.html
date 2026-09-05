@@ -180,33 +180,6 @@
             }
         });
 
-        // 前端搜索关键词预处理（只要包含数字就默认关键词为“兰州”）
-        document.getElementById('searchForm').addEventListener('submit', function(e) {
-        var input = document.getElementById('cityInput');
-        var rawValue = input.value.trim();
-        
-        if (/\d/.test(rawValue)) {
-            e.preventDefault();
-            input.value = '兰州';
-            // 简单提示
-            var tip = document.createElement('div');
-            tip.style.color = '#ff6b6b';
-            tip.style.fontSize = '0.8rem';
-            tip.style.textAlign = 'right';
-            tip.style.marginTop = '4px';
-            tip.innerText = '⚠️ 已自动修正为“兰州”';
-  
-            var oldTip = document.getElementById('cityTip');
-            if (oldTip) oldTip.remove();
-                tip.id = 'cityTip';
-                this.appendChild(tip);
-                // 延迟重新提交
-                setTimeout(() => {
-                    this.submit();
-                }, 500);
-            }
-        });
-
         if (!window.location.search.includes('lat=') && !window.location.search.includes('city=')) {
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
@@ -333,6 +306,33 @@
         renderButtons();
 
         window.addEventListener('resize', () => myChart.resize());
+
+        // 前端搜索关键词预处理（只要包含数字就默认关键词为“兰州”）
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+        var input = document.getElementById('cityInput');
+        var rawValue = input.value.trim();
+        
+        if (/\d/.test(rawValue)) {
+            e.preventDefault();
+            input.value = '兰州';
+            // 简单提示
+            var tip = document.createElement('div');
+            tip.style.color = '#ff6b6b';
+            tip.style.fontSize = '0.8rem';
+            tip.style.textAlign = 'right';
+            tip.style.marginTop = '4px';
+            tip.innerText = '⚠️ 已自动修正为“兰州”';
+  
+            var oldTip = document.getElementById('cityTip');
+            if (oldTip) oldTip.remove();
+                tip.id = 'cityTip';
+                this.appendChild(tip);
+                // 延迟重新提交
+                setTimeout(() => {
+                    this.submit();
+                }, 500);
+            }
+        });
     </script>
 </body>
 </html>

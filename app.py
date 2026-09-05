@@ -110,7 +110,7 @@ def index():
     
     # 如果清洗后为空（纯数字、纯标点、纯空格、纯空格等），不设置 search_city，让页面走默认定位
     if not search_city:
-        search_city = None   # 或者保持空字符串，但这样不会触发搜索逻辑
+        search_city = "兰州"   # 或者保持空字符串，但这样不会触发搜索逻辑
         city_warning = None
     elif raw_input != search_city:
         city_warning = f'已自动清理无效字符："{raw_input}" → "{search_city}"'

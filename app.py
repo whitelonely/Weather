@@ -90,18 +90,8 @@ def clean_city_input(raw):
     # 如果全是空格，返回空字符串
     if not raw:
         return ''
-<<<<<<< HEAD
     
-    # 去除首尾空格
-    raw = raw.strip()
-    
-    # 如果全是空格，返回空字符串
-    if not raw:
-        return ''
-=======
->>>>>>> 38e87cd (Add search keywords detection and preprocessing)
-    
-    # 提取所有中英文字符（用于判断是否有有效内容）
+    # 提取所有中英文字符
     chinese_english = re.sub(r'[^a-zA-Z\u4e00-\u9fff]', '', raw)
     # 如果提取后没有中英文字符，说明输入无效（纯数字、纯标点等）
     if not chinese_english:
@@ -128,23 +118,13 @@ def index():
     search_city = clean_city_input(raw_input)
     
     if search_city is None:
-<<<<<<< HEAD
         # 无效输入 → 强制"兰州"
-        search_city = "兰州"
-        city_warning = '输入无效，已自动切换为兰州天气'
-    elif search_city == '':
-        # 空输入 → 走默认定位，不提示
-        search_city = ''
-        city_warning = None
-=======
-        # 无效输入
         search_city = "兰州"
         city_warning = '输入无效，已自动切换为兰州天气'
     elif search_city == '':
         # 空输入
         search_city = '兰州'
-        city_warning = '无关键词输入，已自动切换为兰州天气'
->>>>>>> 38e87cd (Add search keywords detection and preprocessing)
+        city_warning = '无输入，已自动切换为兰州天气'
     elif raw_input != search_city:
         # 清洗前后不一致 → 显示提示
         city_warning = f'已自动清理无效字符："{raw_input}" → "{search_city}"'

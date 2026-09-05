@@ -91,8 +91,6 @@ def clean_city_input(raw):
     
     # 去除所有空白字符（空格、换行、制表符等）
     cleaned = re.sub(r'\s+', '', raw)
-    # 去除数字
-    cleaned = re.sub(r'\d+', '', cleaned)
     # 去除特殊标点符号（保留中英文）
     cleaned = re.sub(r'[^a-zA-Z\u4e00-\u9fff]', '', cleaned)
     

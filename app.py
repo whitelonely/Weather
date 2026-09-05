@@ -123,8 +123,8 @@ def index():
         city_warning = '输入无效，已自动切换为兰州天气'
     elif search_city == '':
         # 空输入
-        search_city = '兰州'
-        city_warning = '无输入，已自动切换为兰州天气'
+        search_city = ''
+        city_warning = None
     elif raw_input != search_city:
         # 清洗前后不一致 → 显示提示
         city_warning = f'已自动清理无效字符："{raw_input}" → "{search_city}"'

@@ -82,16 +82,20 @@
             <a href="/" style="display: inline-flex; align-items: center; line-height: 0; margin-right: 0.5rem;">
                 <img src="../static/weather.png" style="width: 120px; height: auto;" alt="天气WEATHER">
             </a>
-            <form method="get" class="row g-2 ms-auto" style="flex: 1; justify-content: flex-end; id="searchForm"">
+            <form method="get" class="row g-2 ms-auto" style="flex: 1; justify-content: flex-end;" id="searchForm">
                 <div class="col-auto" style="width: 35%;">
                     <input 
                         type="search" 
                         name="city" class="form-control" 
                         placeholder="输入城市名（中文不加市/国外英文）" 
-                        value="{{ search_city }}">
+                        value="{{ search_city }}"
+                        id="cityInput">
                 </div>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-light">搜索</button>
+                </div>
+                <div class="col-12 text-end" id="searchTip" style="font-size: 0.8rem; color: #ff6b6b; margin-top: 5px; display: none;">
+                    ⚠️ 请输入城市名
                 </div>
             </form>
         </div>

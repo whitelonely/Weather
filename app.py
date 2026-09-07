@@ -208,9 +208,9 @@ def index():
             # 优先
             loc = get_location_by_tencent(client_ip)
             # 备选暂时弃置
-            # if not loc:
-            #     print("腾讯定位失败，尝试 ip-api.com")
-            #     loc = get_location_by_ip(client_ip)
+            if loc == None or loc == '':
+                print("腾讯定位失败，尝试 ip-api.com")
+                loc = get_location_by_ip(client_ip)
 
             if loc:
                 lat, lon, ip_city = loc

@@ -6,9 +6,11 @@
 # @Update2  : add city-search(260805)
 # @Update3  : modularize code and fix some bugs(260806)
 # @update4  : Optimize IP location, support visitor-IP weather(200903)
+# @update5  : Add Tencent Map IP location as priority 2 (200907)
 # @Author   : KAI
 # @FileName : weather_app.py
 # @Blog     : https://whitelonely.github.io
+# @site     : https://weather.whitelonely.me
 '''
 
 import os
@@ -41,6 +43,33 @@ def get_client_ip():
         return real_ip.strip()
 
     return request.remote_addr
+
+def get_location_by_tencent(client_ip):
+    try:
+        key = os.environ.get('TENCENT_MAP_KEY')
+        if not key:
+            print("腾讯地图 API Key 未配置")
+            return None
+
+        url = f"https://apis.map.qq.com/ws/location/v1/ip?key={key}&ip={client_ip}"
+        resp = requests.get(url, timeout=10)
+        data = resp.json()
+
+        if data.get('status') == 0:
+            result = data.get('result', {})
+            location = result.get('location', {})
+            ad_info = result.get('ad_info', {})
+
+            lat = location.get('lat')
+            lng = location.get('lng')
+            city = ad_info.get('city', '')
+
+            if lat is not None and lng is not None:
+                print(f"腾讯地图定位成功: {city} ({lat}, {lng})")
+                return lat, lng, city
+    except Exception as e:
+        print(f"腾讯地图 IP 定位异常: {e}")
+    return None
 
 def get_location_by_ip(client_ip):
     # 原始本地测试获取IP代码
@@ -174,8 +203,15 @@ def index():
 
             # 修改后代码
             client_ip = get_client_ip()   # 获取真实IP
-            loc = get_location_by_ip(client_ip)  # 传入IP
-            print(loc)
+            loc = None
+
+            # 优先
+            loc = get_location_by_tencent(client_ip)
+            # 备选
+            if not loc:
+                print("腾讯定位失败，尝试 ip-api.com")
+                loc = get_location_by_ip(client_ip)
+
             if loc:
                 lat, lon, ip_city = loc
             else:

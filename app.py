@@ -205,19 +205,20 @@ def index():
             client_ip = get_client_ip()   # 获取真实IP
             loc = None
 
-            try:
-                loc = get_location_by_tencent(client_ip)
-            except:
-                loc = None
-            
-            if loc and loc[0] is not None:
-                lat, loc, ip_city = loc
+            # 优先
+            loc = get_location_by_tencent(client_ip)
+            # 备选暂时弃置
+            # if not loc:
+            #     print("腾讯定位失败，尝试 ip-api.com")
+            #     loc = get_location_by_ip(client_ip)
+
+            if loc:
+                lat, lon, ip_city = loc
             else:
-                loc = get_location_by_ip(client_ip)
-                if loc:
-                   lat, loc, ip_city = loc
-                else:
-                    lat, lon, ip_city = MANUAL_lat, MANUAL_lon, None
+                lat, lon, ip_city = MANUAL_lat, MANUAL_lon, None
+        else:
+            lat, lon = MANUAL_lat, MANUAL_lon
+            ip_city = None
 
         ### =================  当前天气后端 ================= ###
         try:

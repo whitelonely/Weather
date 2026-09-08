@@ -1,6 +1,6 @@
 '''
 # @Pro_name : 天气
-# @Version  : v1.0.508061
+# @Version  : v1.1.109073
 # @Time     : 2026.08
 # @Update1  : add ip-api to get lat and lon.(260804)
 # @Update2  : add city-search(260805)

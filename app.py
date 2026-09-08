@@ -24,7 +24,8 @@ from pypinyin import lazy_pinyin, Style
 app = Flask(__name__)
 
 API_KEY = os.environ.get('API_KEY')
-
+CURRENT_URL = "https://api.openweathermap.org/data/2.5/weather"
+FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
 USE_IP_LOCATION = True  # True: 通过IP获取, False: 使用手动经纬度
 # lon = 103.83   # 经度
 # lat = 36.06    # 纬度
@@ -102,17 +103,12 @@ def chinese_to_pinyin(text):
             result.append(char)
     return ''.join(result).lower()
 
-CURRENT_URL = "https://api.openweathermap.org/data/2.5/weather"
-FORECAST_URL = "https://api.openweathermap.org/data/2.5/forecast"
-
-
 def kelvin_to_celsius_fahrenheit(temp_k):
     temp_c = temp_k - 273.15
     temp_f = temp_c * 9 / 5 + 32
     return round(temp_c, 1), round(temp_f, 1)
 
 def clean_city_input(raw):
-    
     # 去除首尾空格
     raw = raw.strip()
     
@@ -124,7 +120,7 @@ def clean_city_input(raw):
     chinese_english = re.sub(r'[^a-zA-Z\u4e00-\u9fff]', '', raw)
     # 如果提取后没有中英文字符，说明输入无效（纯数字、纯标点等）
     if not chinese_english:
-        return None  # 触发回退"兰州"
+        return None
     # 去掉数字
     cleaned = re.sub(r'\d+', '', raw)
     # 去掉所有特殊标点符号（保留中英文 + 保留空格）
@@ -160,7 +156,7 @@ def index():
     else:
         city_warning = None
 
-    # ===== GPS定位 =====
+    ### ===============  GPS定位 =============== ###
     lat_param = request.args.get('lat')
     lon_param = request.args.get('lon')
     if lat_param and lon_param:
@@ -196,19 +192,15 @@ def index():
             use_search_result = False   # 搜索失败，回退到IP定位
 
     if current_data is None and not use_search_result:
-        ### ===============  IP-API获取经纬度 =============== ###
+        ### ===============  获取IP经纬度等 =============== ###
         if USE_IP_LOCATION:
-            # 原始代码
-            # loc = get_location_by_ip()
-
-            # 修改后代码
-            client_ip = get_client_ip()   # 获取真实IP
+            client_ip = get_client_ip()
             loc = None
 
             # 优先
             loc = get_location_by_tencent(client_ip)
-            # 备选暂时弃置
-            if loc == None or loc == '':
+            # 备选
+            if not loc:
                 print("腾讯定位失败，尝试 ip-api.com")
                 loc = get_location_by_ip(client_ip)
 
